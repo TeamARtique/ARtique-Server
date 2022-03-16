@@ -1,3 +1,14 @@
-node_modules
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
+node_modules/
 .env
+*.tgz
+.yarn-integrity
+artique-34e8e-firebase-adminsdk-3hbqi-4f652b5de4.json
 .DS_Store
