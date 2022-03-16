@@ -12,3 +12,4 @@ node_modules/
 .yarn-integrity
 artique-34e8e-firebase-adminsdk-3hbqi-4f652b5de4.json
 .DS_Store
+functions/firebase-debug.log

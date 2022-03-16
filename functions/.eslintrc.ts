@@ -4,8 +4,7 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: [
-  ],
+  extends: [],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: ["tsconfig.json", "tsconfig.dev.json"],
