@@ -21,4 +21,7 @@ module.exports = {
 
     // 유저 삭제 성공
     USER_DELETE_SUCCESS: "유저 삭제 성공",
+
+    // 유저 조회
+    READ_ALL_USERS_SUCCESS: "유저 조회 성공"
 };
