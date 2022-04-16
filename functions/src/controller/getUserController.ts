@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import functions from 'firebase-functions';
 const responseMessage = require("../constants/responseMessage");
 const statusCode = require("../constants/statusCode");
-const util = require("../lib/util")
+const util = require("../lib/util");
 const db = require('../db/db');
 const { userDB } = require('../db');
 
 export default async (req: Request, res: Response) => {
+    console.log("오긴온다야.");
     let client;
     try {
         client = await db.connect(req);
