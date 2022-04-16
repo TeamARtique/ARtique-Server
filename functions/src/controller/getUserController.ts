@@ -7,7 +7,6 @@ const db = require('../db/db');
 const { userDB } = require('../db');
 
 export default async (req: Request, res: Response) => {
-    console.log("오긴온다야.");
     let client;
     try {
         client = await db.connect(req);
