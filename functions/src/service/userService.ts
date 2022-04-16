@@ -1,4 +1,5 @@
 // const _ = require("lodash");
+const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
 // ✅ 이메일로 유저 찾기
 const findUserByEmail = async (client: any, email: string) => {
@@ -23,9 +24,9 @@ const createUser = async (
   const { rows } = await client.query(
     `
       INSERT INTO "user"
-      (email, nickname, profile_image ,introduction, website)
+      (email, nickname, profile_image)
       VALUES
-      ($1, $2, $3, $4, $5)
+      ($1, $2, $3)
       RETURNING *
       `,
 
@@ -38,7 +39,38 @@ const createUser = async (
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 리프레시 토큰 갱신
+const updateRefreshToken = async (
+  client: any,
+  userId: number,
+  refreshToken: string
+) => {
+  const { rows: existingRows } = await client.query(
+    `
+    SELECT * FROM "user"
+    WHERE id = $1
+    AND is_deleted = false
+    `,
+    [userId],
+  );
+
+  if (existingRows.length === 0) return false;
+
+  const { rows } = await client.query(
+    `
+    UPDATE "user"
+    SET refresh_token = $2, updated_at = now()
+    WHERE id = $1
+    AND is_deleted = false
+    RETURNING *
+    `,
+    [userId, refreshToken],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
   findUserByEmail,
-  createUser
+  createUser,
+  updateRefreshToken
 }
