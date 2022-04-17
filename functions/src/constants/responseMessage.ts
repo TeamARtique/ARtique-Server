@@ -3,7 +3,10 @@ module.exports = {
     NULL_VALUE: "필요한 값이 없습니다",
     OUT_OF_VALUE: "파라미터 값이 잘못되었습니다",
     INTERNAL_SERVER_ERROR: "서버 내부 오류",
-    TOKEN_ERROR: "유효하지 않은 토큰",
+    TOKEN_ERROR: "유효하지 않은 토큰입니다",
+    TOKEN_EXPIRED: "만료된 토큰입니다",
+    TOKEN_INVALID: "유효하지 않은 토큰입니다",
+    TOKEN_EMPTY: "토큰이 없습니다",
 
     // 회원가입
     CREATED_USER: "회원 가입 성공",

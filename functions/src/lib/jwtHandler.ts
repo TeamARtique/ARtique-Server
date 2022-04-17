@@ -5,10 +5,10 @@ const { TOKEN_INVALID, TOKEN_EXPIRED } = require("../constants/jwt");
 // JWT를 발급/인증할 떄 필요한 secretKey를 설정합니다. 값은 .env로부터 불러옵니다.
 const secretKey = process.env.JWT_SECRET;
 
-// id, email, name, firebaseId가 담긴 JWT를 발급합니다.
+// id, email, nickname, firebaseId가 담긴 JWT를 발급합니다.
 const access = (user: any) => {
   const payload = {
-    id: user.id,
+    id: user.userId,
     email: user.email,
     nickname: user.nickname || null,
     firebaseId: user.firebaseId,

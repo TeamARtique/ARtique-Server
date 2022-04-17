@@ -1,11 +1,25 @@
 // const _ = require("lodash");
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
+// ✅ 아이디값으로 유저 찾기
+const findUserById = async (client: any, userId: number) => {
+  const { rows } = await client.query(
+    `
+      SELECT u.*
+      FROM "user" u
+      WHERE u.id = $1
+      AND is_deleted = false
+      `,
+    [userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 // ✅ 이메일로 유저 찾기
 const findUserByEmail = async (client: any, email: string) => {
   const { rows } = await client.query(
     `
-      SELECT id, email FROM "user"
+      SELECT id as user_id, email, nickname FROM "user"
       WHERE email = $1
       AND is_deleted = false
       `,
@@ -27,9 +41,8 @@ const createUser = async (
       (email, nickname, profile_image)
       VALUES
       ($1, $2, $3)
-      RETURNING *
+      RETURNING id as user_id, email, nickname
       `,
-
     [
       email,
       nickname,
@@ -70,6 +83,7 @@ const updateRefreshToken = async (
 };
 
 export default {
+  findUserById,
   findUserByEmail,
   createUser,
   updateRefreshToken

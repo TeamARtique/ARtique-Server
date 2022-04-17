@@ -50,27 +50,25 @@ export default async (req: Request, res: Response) => {
         
         let client;
         client = await db.connect();
-        const checkUser = await userService.findUserByEmail(client, user.data.kakao_account.email);
-        if (!checkUser) {
+        const findUser = await userService.findUserByEmail(client, user.data.kakao_account.email);
+        if (!findUser) {
             // ✅ DB에 없는 유저는 새로 생성한 후 토큰 발급
             const newUser = await userService.createUser(client, user.data.kakao_account.email, user.data.kakao_account.profile.nickname, user.data.kakao_account.profile.profile_image_url);
-            const jwtAccessToken = jwtHandlers.access(newUser.id); 
-        
-            jwtHandlers(newUser.id);
+            const jwtAccessToken = jwtHandlers.access(newUser); 
+
             let signData = {
                 user: newUser,
-                token: jwtAccessToken,
-                access_token: access_token,
-                refresh_token: jwtRefreshtoken
+                accessToken: jwtAccessToken.accesstoken,
+                refreshToken: jwtRefreshtoken.refreshtoken
             }
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CREATED_USER, signData));
         }
         
         // ✅ DB에 이미 존재하는 유저는 토큰 발급 후 전달
-        const jwtToken = jwtHandlers.access(checkUser);
-        userService.updateRefreshToken(client, checkUser.id, jwtRefreshtoken.refreshtoken);
+        const jwtToken = jwtHandlers.access(findUser);
+        userService.updateRefreshToken(client, findUser.id, jwtRefreshtoken.refreshtoken);
         let loginData = {
-            user: checkUser,
+            user: findUser,
             accessToken: jwtToken.accesstoken,
             refreshToken: jwtRefreshtoken.refreshtoken
         }
@@ -82,7 +80,6 @@ export default async (req: Request, res: Response) => {
                 return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.TOKEN_ERROR));
             }
         }
-
         // ⛔️ 내부 서버 오류
         return res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
     }
