@@ -11,7 +11,6 @@ const access = (user: any) => {
     id: user.userId,
     email: user.email,
     nickname: user.nickname || null,
-    firebaseId: user.firebaseId,
   };
 
   const result = {
