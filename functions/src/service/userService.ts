@@ -33,20 +33,22 @@ const createUser = async (
   client: any,        
   email: string,
   nickname: string,
-  profileImage: string
+  profileImage: string,
+  refreshToken: string
 ) => {
   const { rows } = await client.query(
     `
       INSERT INTO "user"
-      (email, nickname, profile_image)
+      (email, nickname, profile_image, refresh_token)
       VALUES
-      ($1, $2, $3)
+      ($1, $2, $3, $4)
       RETURNING id as user_id, email, nickname
       `,
     [
       email,
       nickname,
-      profileImage
+      profileImage,
+      refreshToken
     ],
   );
   return convertSnakeToCamel.keysToCamel(rows[0]);
@@ -68,7 +70,7 @@ const updateRefreshToken = async (
   );
 
   if (existingRows.length === 0) return false;
-
+  
   const { rows } = await client.query(
     `
     UPDATE "user"

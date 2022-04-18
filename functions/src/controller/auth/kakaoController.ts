@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 const axios = require('axios');
-const jwtHandlers = require('../lib/jwtHandler');
-import config from "../config";
-import userService from "../service/userService";
+const jwtHandlers = require('../../lib/jwtHandler');
+import config from "../../config";
+import userService from "../../service/userService";
 const qs = require('qs');
-const db = require('../db/db');
-const responseMessage = require("../constants/responseMessage");
-const statusCode = require("../constants/statusCode");
-const util = require("../lib/util");
+const db = require('../../db/db');
+const responseMessage = require("../../constants/responseMessage");
+const statusCode = require("../../constants/statusCode");
+const util = require("../../lib/util");
 
 /**
  *  @route POST /auth/kakaoLogin
@@ -53,7 +53,7 @@ export default async (req: Request, res: Response) => {
         const findUser = await userService.findUserByEmail(client, user.data.kakao_account.email);
         if (!findUser) {
             // ✅ DB에 없는 유저는 새로 생성한 후 토큰 발급
-            const newUser = await userService.createUser(client, user.data.kakao_account.email, user.data.kakao_account.profile.nickname, user.data.kakao_account.profile.profile_image_url);
+            const newUser = await userService.createUser(client, user.data.kakao_account.email, user.data.kakao_account.profile.nickname, user.data.kakao_account.profile.profile_image_url, jwtRefreshtoken.refreshtoken);
             const jwtAccessToken = jwtHandlers.access(newUser); 
 
             let signData = {
@@ -66,7 +66,7 @@ export default async (req: Request, res: Response) => {
         
         // ✅ DB에 이미 존재하는 유저는 토큰 발급 후 전달
         const jwtToken = jwtHandlers.access(findUser);
-        userService.updateRefreshToken(client, findUser.id, jwtRefreshtoken.refreshtoken);
+        userService.updateRefreshToken(client, findUser.userId, jwtRefreshtoken.refreshtoken);
         let loginData = {
             user: findUser,
             accessToken: jwtToken.accesstoken,
