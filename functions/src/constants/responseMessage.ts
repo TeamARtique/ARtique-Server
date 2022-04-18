@@ -17,7 +17,11 @@ module.exports = {
     LOGIN_SUCCESS: "로그인 성공",
     LOGIN_FAIL: "로그인 실패",
     NO_USER: "존재하지 않는 회원입니다.",
-    MISS_MATCH_PW: "비밀번호가 맞지 않습니다.",
+
+    // 전시 조회
+    READ_EXHIBITION_MAIN_SUCCESS: "카테고리별 홈 전시 리스트 조회 성공",
+    READ_EXHIBITION_LIST_SUCCESS: "카테고리별 전시 리스트 조회 및 정렬 성공",
+    READ_EXHIBITION_DETAIL_SUCCESS: "전세 상세 조회 성공",
 
     // 프로필 조회
     READ_PROFILE_SUCCESS: "프로필 조회 성공",
