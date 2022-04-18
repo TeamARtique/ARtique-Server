@@ -1,5 +1,5 @@
 import express from 'express';
-import kakaoController from '../controller/kakaoController';
+import kakaoController from '../controller/auth/kakaoController';
 const router = express.Router();
 
 router.post('/kakaoLogin', kakaoController);
