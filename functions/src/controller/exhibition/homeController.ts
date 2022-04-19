@@ -16,8 +16,8 @@ export default async (req: Request, res: Response) => {
     let category = parseInt(req.params.category);
     try {
         client = await db.connect(req);
-        const categoryExhibitionList = await exhibitionService.getMainPostByCategory(client, category);
-        let popularExhibitionList = await exhibitionService.getMainPopularPostByCategory(client, category, req.body.user.id);
+        const categoryExhibitionList = await exhibitionService.getMainExhibitionByCategory(client, category);
+        let popularExhibitionList = await exhibitionService.getMainPopularExhibitionByCategory(client, category, req.body.user.id);
 
         let popularExhibitionPostList = await Promise.all(popularExhibitionList.map(async (popularData: any) => {
             let artistData = await userService.findUserById(client, popularData.userId);

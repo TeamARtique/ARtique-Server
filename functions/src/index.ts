@@ -18,7 +18,7 @@ if (admin.apps.length === 0) {
 import express = require('express');
 import { Request, Response, NextFunction } from 'express';
 import cors = require('cors');
-// const cors = require('cors');
+
 const cookieParser = require('cookie-parser');
 const hpp = require('hpp');
 const helmet = require('helmet');
