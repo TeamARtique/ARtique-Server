@@ -51,7 +51,7 @@ export default async (req: Request, res: Response) => {
                 bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
             }
         }
-        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_EXHIBITION_MAIN_SUCCESS, finalData));
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_EXHIBITION_DETAIL_SUCCESS, finalData));
     } catch (error) {
         functions.logger.error(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
         console.log(error);
