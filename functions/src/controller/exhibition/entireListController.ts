@@ -16,7 +16,6 @@ export default async (req: Request, res: Response) => {
     let category = parseInt(req.params.category);
     let sortType = req.query.sort;
     let userId = req.body.user.id;
-    console.log("params: ", category, sortType, userId);
     
     try {
         client = await db.connect(req);

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import userService from "../../service/userService";
 import exhibitionService from "../../service/exhibitionService";
+import artworkService from "../../service/artworkService";
 import likeService from "../../service/likeService";
 import bookmarkService from "../../service/bookmarkService";
 const db = require('../../db/db');
@@ -9,8 +9,8 @@ const statusCode = require("../../constants/statusCode");
 const util = require("../../lib/util");
 
 /**
- *  @route GET /exhibition/:exhibitionId
- *  @desc GET exhibition detail data (전시 상세조회) 
+ *  @route GET /gallery/:exhibitionId
+ *  @desc GET AR gallery detail data (AR 전시 상세조회) 
  *  @access Private
  */
 export default async (req: Request, res: Response) => {
@@ -20,27 +20,22 @@ export default async (req: Request, res: Response) => {
     
     try {
         client = await db.connect(req);
-        const exhibitionDetailData = await exhibitionService.getDetailExhibition(client, exhibitionId);
+        const galleryDetailData = await exhibitionService.getDetailExhibition(client, exhibitionId);
+        const artworkData = await artworkService.getArtworks(client, exhibitionId);
         const likeCount = await likeService.getLikeCount(client, exhibitionId);
         const isLiked = await likeService.getIsLiked(client, exhibitionId, userId); 
         const bookmarkCount = await bookmarkService.getBookmarkCount(client, exhibitionId);
         const isBookmarked = await bookmarkService.getIsBookmarked(client, exhibitionId, userId);
-        let artistData = await userService.findUserById(client, exhibitionDetailData.userId);
 
         let finalData = {
-            exhibition: {
-                exhibitionId: exhibitionDetailData.id,
-                title: exhibitionDetailData.title,
-                posterImage: exhibitionDetailData.posterImage,
-                posterTheme: exhibitionDetailData.posterTheme,
-                description: exhibitionDetailData.description,
-                isPublic: exhibitionDetailData.isPublic,
-                createdAt: exhibitionDetailData.createdAt,
+            gallery: {
+                exhibitionId: galleryDetailData.id,
+                gallerySize: galleryDetailData.gallerySize,
+                galleryTheme: galleryDetailData.theme,
+                isPublic: galleryDetailData.isPublic,
             },
-            artist: {
-                artistId: exhibitionDetailData.userId,
-                isWriter: userId == exhibitionDetailData.userId ? true : false,
-                nickname: artistData.nickname,
+            artworks: {
+                artworkData
             },
             like: {
                 isLiked: isLiked.isLiked == 1? true : false,
@@ -51,7 +46,7 @@ export default async (req: Request, res: Response) => {
                 bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
             }
         }
-        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_EXHIBITION_DETAIL_SUCCESS, finalData));
+        res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_AR_GALLERY_DETAIL_SUCCESS, finalData));
     } catch (error) {
         functions.logger.error(`[ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`, `[CONTENT] ${error}`);
         console.log(error);

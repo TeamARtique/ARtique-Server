@@ -33,6 +33,8 @@ const getMainPopularExhibitionByCategory = async (client: any, category: number,
     LEFT OUTER JOIN "bookmark" b2
     ON e.id = b2.exhibition_id
     AND b2.user_id = $2
+    WHERE e.category = $1
+    AND e.is_deleted = false
     GROUP BY e.id ORDER BY count(l.exhibition_id) DESC LIMIT 6
     `,
     [category, userId]
@@ -93,7 +95,7 @@ const getEntireCategoryExhibitionByLike = async (client: any, category: number, 
 };
 
 // ✅ 전시 상세조회
-const getDetailExhibition = async (client: any, exhibitionid: number, userId: number) => {
+const getDetailExhibition = async (client: any, exhibitionid: number) => {
   const { rows } = await client.query(
     `
     SELECT e.*
