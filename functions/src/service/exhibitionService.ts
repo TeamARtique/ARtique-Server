@@ -26,20 +26,25 @@ const getMainPopularExhibitionByCategory = async (client: any, category: number,
     FROM "exhibition" e
     INNER JOIN "like" l
     ON e.id = l.exhibition_id
+    AND l.is_deleted = false
     LEFT OUTER JOIN "like" l2
     ON e.id = l2.exhibition_id
     AND l2.user_id = $2
+    AND l2.is_deleted = false
     LEFT OUTER JOIN "bookmark" b
     ON e.id = b.exhibition_id
+    AND b.is_deleted = false
     LEFT OUTER JOIN "bookmark" b2
     ON e.id = b2.exhibition_id
     AND b2.user_id = $2
+    AND b2.is_deleted = false
     WHERE e.category = $1
     AND e.is_deleted = false
     GROUP BY e.id ORDER BY count(l.exhibition_id) DESC LIMIT 6
     `,
     [category, userId]
   );
+  console.log("result: ", convertSnakeToCamel.keysToCamel(rows));
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
@@ -51,14 +56,18 @@ const getEntireCategoryExhibitionDefault = async (client: any, category: number,
     FROM "exhibition" e
     LEFT OUTER JOIN "like" l
     ON e.id = l.exhibition_id
+    AND l.is_deleted = false
     LEFT OUTER JOIN "like" l2
     ON e.id = l2.exhibition_id
     AND l2.user_id = $2
+    AND l2.is_deleted = false
     LEFT OUTER JOIN "bookmark" b
     ON e.id = b.exhibition_id
+    AND b.is_deleted = false
     LEFT OUTER JOIN "bookmark" b2
     ON e.id = b2.exhibition_id
     AND b2.user_id = $2
+    AND b2.is_deleted = false
     WHERE e.category = $1
     AND e.is_public = true
     AND e.is_deleted = false
@@ -77,14 +86,18 @@ const getEntireCategoryExhibitionByLike = async (client: any, category: number, 
     FROM "exhibition" e
     LEFT OUTER JOIN "like" l
     ON e.id = l.exhibition_id
+    AND l.is_deleted = false
     LEFT OUTER JOIN "like" l2
     ON e.id = l2.exhibition_id
+    AND l2.is_deleted = false
     AND l2.user_id = $2
     LEFT OUTER JOIN "bookmark" b
     ON e.id = b.exhibition_id
+    AND b.is_deleted = false
     LEFT OUTER JOIN "bookmark" b2
     ON e.id = b2.exhibition_id
     AND b2.user_id = $2
+    AND b2.is_deleted = false
     WHERE e.category = $1
     AND e.is_public = true
     AND e.is_deleted = false

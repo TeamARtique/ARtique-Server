@@ -57,7 +57,7 @@ export default async (req: Request, res: Response) => {
                 likeCount: parseInt(likeCount.likeCount)
             },
             bookmark: {
-                isBookmarked: isBookmarked.isLiked == 1? true : false,
+                isBookmarked: isBookmarked.isBookmarked == 1? true : false,
                 bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
             }
         }

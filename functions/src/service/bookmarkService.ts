@@ -28,7 +28,56 @@ const getIsBookmarked = async (client: any, exhibitionId: number, userId: number
     return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 전시id 기반 북마크 정보 가져오기
+const getBookmarkByExhibitionId = async (client: any, exhibitionId: number, userId: number) => {
+  const { rows } = await client.query(
+    `
+        SELECT * FROM "bookmark"
+        WHERE exhibition_id = $1
+        AND user_id = $2
+        `,
+    [exhibitionId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
+// ✅ 북마크 생성
+const createBookmarkByExhibitionId = async (client: any, exhibitionId: number, userId: number) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO "bookmark"
+    (exhibition_id, user_id)
+    VALUES
+    ($1, $2)
+    RETURNING exhibition_id, is_deleted as is_liked
+    `,
+    [exhibitionId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
+// ✅ 북마크 업데이트
+const updateBookmarkByExhibitionId = async (client: any, exhibitionId: number, userId: number) => {
+  const { rows } = await client.query(
+    `
+    UPDATE "bookmark"
+    SET updated_at = now(), is_deleted = CASE
+    WHEN is_deleted = true THEN false
+    ELSE true
+    END
+    WHERE exhibition_id = $1
+    AND user_id = $2
+    RETURNING exhibition_id, is_deleted as is_bookmarked
+    `,
+    [exhibitionId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
     getBookmarkCount,
-    getIsBookmarked
+    getIsBookmarked,
+    getBookmarkByExhibitionId,
+    createBookmarkByExhibitionId,
+    updateBookmarkByExhibitionId,
 };

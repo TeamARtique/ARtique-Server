@@ -46,6 +46,7 @@ app.use("/auth", require("./api/auth"));
 app.use("/exhibition", require("./api/exhibition"));
 app.use("/gallery", require("./api/gallery"));
 app.use("/like", require("./api/like"));
+app.use("/bookmark", require("./api/bookmark"));
 
 // route 폴더에 우리가 지정한 경로가 아닌 다른 경로로 요청이 올 경우,
 // 잘못된 경로로 요청이 들어왔다는 메시지를 클라이언트에 보냄

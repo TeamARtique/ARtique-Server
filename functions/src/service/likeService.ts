@@ -22,6 +22,7 @@ const getIsLiked = async (client: any, exhibitionId: number, userId: number) => 
     FROM "like" l
     WHERE l.exhibition_id = $1
     AND l.user_id = $2
+    AND l.is_deleted = false
     `,
     [exhibitionId, userId]
     );
