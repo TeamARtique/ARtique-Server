@@ -128,6 +128,20 @@ const putEditDetailExhibition = async (client: any, exhibitionId: number, exhibi
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 전시 삭제
+const deleteExhibition = async (client: any, exhibitionId: number) => {
+  const { rows } = await client.query(
+    `
+    UPDATE exhibition e
+    SET is_deleted = true, updated_at = now()
+    WHERE e.id = $1
+    RETURNING id as exhibition_id, is_deleted
+    `,
+    [exhibitionId]
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
   getMainExhibitionByCategory,
   getMainPopularExhibitionByCategory,
@@ -135,4 +149,5 @@ export default {
   getEntireCategoryExhibitionByLike,
   getDetailExhibition,
   putEditDetailExhibition,
+  deleteExhibition,
 };

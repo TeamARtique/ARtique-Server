@@ -29,6 +29,9 @@ module.exports = {
     // 전시 수정
     EXHIBITION_DETAIL_UPDATE_SUCCESS: "전시글 수정 성공",
 
+    // 전시 삭제
+    EXHIBITION_DELETE_SUCCESS: "전시글 삭제 성공",
+
     // 프로필 조회
     READ_PROFILE_SUCCESS: "프로필 조회 성공",
 

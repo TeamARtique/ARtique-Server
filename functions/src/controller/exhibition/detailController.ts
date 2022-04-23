@@ -45,6 +45,7 @@ export default async (req: Request, res: Response) => {
                 description: exhibitionDetailData.description,
                 isPublic: exhibitionDetailData.isPublic,
                 createdAt: exhibitionDetailData.createdAt,
+                isDeleted: exhibitionDetailData.isDeleted
             },
             artist: {
                 artistId: exhibitionDetailData.userId,
