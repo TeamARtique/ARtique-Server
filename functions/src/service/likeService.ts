@@ -14,6 +14,7 @@ const getLikeCount = async (client: any, exhibitionId: number) => {
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 유저의 좋아요 정보 가져오기
 const getIsLiked = async (client: any, exhibitionId: number, userId: number) => {
     const { rows } = await client.query(
     `
@@ -27,7 +28,56 @@ const getIsLiked = async (client: any, exhibitionId: number, userId: number) => 
     return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 전시id 기반 좋아요 정보 가져오기
+const getLikeByExhibitionId = async (client: any, exhibitionId: number, userId: number) => {
+  const { rows } = await client.query(
+    `
+        SELECT * FROM "like"
+        WHERE exhibition_id = $1
+        AND user_id = $2
+        `,
+    [exhibitionId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
+// ✅ 좋아요 생성
+const createLikeByExhibitionId = async (client: any, exhibitionId: number, userId: number) => {
+  const { rows } = await client.query(
+    `
+    INSERT INTO "like"
+    (exhibition_id, user_id)
+    VALUES
+    ($1, $2)
+    RETURNING exhibition_id, is_deleted as is_liked
+    `,
+    [exhibitionId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
+// ✅ 좋아요 업데이트
+const updateLikeByExhibitionId = async (client: any, exhibitionId: number, userId: number) => {
+  const { rows } = await client.query(
+    `
+    UPDATE "like"
+    SET updated_at = now(), is_deleted = CASE
+    WHEN is_deleted = true THEN false
+    ELSE true
+    END
+    WHERE exhibition_id = $1
+    AND user_id = $2
+    RETURNING exhibition_id, is_deleted as is_liked
+    `,
+    [exhibitionId, userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
     getLikeCount,
-    getIsLiked
+    getIsLiked,
+    getLikeByExhibitionId,
+    createLikeByExhibitionId,
+    updateLikeByExhibitionId,
 };

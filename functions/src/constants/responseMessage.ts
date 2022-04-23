@@ -32,6 +32,10 @@ module.exports = {
     // 전시 삭제
     EXHIBITION_DELETE_SUCCESS: "전시글 삭제 성공",
 
+    // 좋아요, 북마크
+    EXHIBITION_LIKE_UPDATE_SUCCESS: "전시글 좋아요 업데이트 성공",
+    EXHIBITION_BOOKMARK_UPDATE_SUCCESS: "전시글 북마크 업데이트 성공",
+
     // 프로필 조회
     READ_PROFILE_SUCCESS: "프로필 조회 성공",
 
