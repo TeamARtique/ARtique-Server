@@ -1,4 +1,5 @@
 const convertSnakeToCamel = require("../lib/convertSnakeToCamel");
+import exhibitionDTO from '../interface/req/exhibitionDTO';
 
 // ✅ 카테고리별 메인뷰 포스트 리스트 가져오기
 const getMainExhibitionByCategory = async (client: any, category: number) => {
@@ -107,10 +108,31 @@ const getDetailExhibition = async (client: any, exhibitionid: number) => {
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 전시 상세 수정
+const putEditDetailExhibition = async (client: any, exhibitionId: number, exhibition: exhibitionDTO) => {
+  const { rows } = await client.query(
+    `
+    UPDATE exhibition e
+    SET title = $2, 
+        category = $3, 
+        poster_image = $4, 
+        poster_theme = $5, 
+        description = $6,
+        tag = ARRAY[${exhibition.tag}], 
+        is_public = $7
+    WHERE e.id = $1
+    RETURNING *
+    `,
+    [exhibitionId, exhibition.title, exhibition.category, exhibition.posterImage, exhibition.posterTheme, exhibition.description, exhibition.isPublic]
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
   getMainExhibitionByCategory,
   getMainPopularExhibitionByCategory,
   getEntireCategoryExhibitionDefault,
   getEntireCategoryExhibitionByLike,
   getDetailExhibition,
+  putEditDetailExhibition,
 };
