@@ -17,7 +17,14 @@ export default async (req: Request, res: Response) => {
     try {
         client = await db.connect(req);
         const categoryExhibitionList = await exhibitionService.getMainExhibitionByCategory(client, category);
+        if (!categoryExhibitionList) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
+        
         let popularExhibitionList = await exhibitionService.getMainPopularExhibitionByCategory(client, category, req.body.user.id);
+        if (!popularExhibitionList) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
 
         let popularExhibitionPostList = await Promise.all(popularExhibitionList.map(async (popularData: any) => {
             let artistData = await userService.findUserById(client, popularData.userId);

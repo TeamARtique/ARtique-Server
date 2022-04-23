@@ -26,6 +26,9 @@ export default async (req: Request, res: Response) => {
         const isLiked = await likeService.getIsLiked(client, exhibitionId, userId); 
         const bookmarkCount = await bookmarkService.getBookmarkCount(client, exhibitionId);
         const isBookmarked = await bookmarkService.getIsBookmarked(client, exhibitionId, userId);
+        if (!galleryDetailData || !likeCount || !isLiked || !bookmarkCount || !isBookmarked) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
 
         let finalData = {
             gallery: {

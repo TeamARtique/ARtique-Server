@@ -20,12 +20,21 @@ export default async (req: Request, res: Response) => {
     
     try {
         client = await db.connect(req);
+        if (!exhibitionId) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
         const exhibitionDetailData = await exhibitionService.getDetailExhibition(client, exhibitionId);
         const likeCount = await likeService.getLikeCount(client, exhibitionId);
         const isLiked = await likeService.getIsLiked(client, exhibitionId, userId); 
         const bookmarkCount = await bookmarkService.getBookmarkCount(client, exhibitionId);
         const isBookmarked = await bookmarkService.getIsBookmarked(client, exhibitionId, userId);
+        if (!exhibitionDetailData || !likeCount || !isLiked || !bookmarkCount || !isBookmarked) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
         let artistData = await userService.findUserById(client, exhibitionDetailData.userId);
+        if (!artistData) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
 
         let finalData = {
             exhibition: {

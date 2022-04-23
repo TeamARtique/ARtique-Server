@@ -16,14 +16,25 @@ export default async (req: Request, res: Response) => {
     let category = parseInt(req.params.category);
     let sortType = req.query.sort;
     let userId = req.body.user.id;
-    
+
     try {
         client = await db.connect(req);
         let popularExhibitionList;
+
+        if (category == null || category < 1 || category > 6) {
+            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INCORRECT_CATEGORY));
+        }
+
         if (sortType == "recent") {
             popularExhibitionList = await exhibitionService.getEntireCategoryExhibitionDefault(client, category, userId);
-        } else {
+        } else if (sortType == "like") {
             popularExhibitionList = await exhibitionService.getEntireCategoryExhibitionByLike(client, category, userId);
+        } else {
+            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INCORRECT_SORT));
+        }
+
+        if (!popularExhibitionList) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
         }
 
         let popularExhibitionPostList = await Promise.all(popularExhibitionList.map(async (exhibitionData: any) => {
