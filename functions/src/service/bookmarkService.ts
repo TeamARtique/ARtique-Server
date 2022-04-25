@@ -22,6 +22,7 @@ const getIsBookmarked = async (client: any, exhibitionId: number, userId: number
     FROM "bookmark" b
     WHERE b.exhibition_id = $1
     AND b.user_id = $2
+    AND b.is_deleted = false
     `,
     [exhibitionId, userId]
     );

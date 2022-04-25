@@ -36,6 +36,7 @@ const getLikeByExhibitionId = async (client: any, exhibitionId: number, userId: 
         SELECT * FROM "like"
         WHERE exhibition_id = $1
         AND user_id = $2
+        AND is_deleted = false
         `,
     [exhibitionId, userId],
   );
