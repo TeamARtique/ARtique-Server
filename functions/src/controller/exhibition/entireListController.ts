@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import userService from "../../service/userService";
 import exhibitionService from "../../service/exhibitionService";
+import likeService from "../../service/likeService"
+import bookmarkService from "../../service/bookmarkService"
 const db = require('../../db/db');
 const responseMessage = require("../../constants/responseMessage");
 const statusCode = require("../../constants/statusCode");
@@ -26,9 +28,9 @@ export default async (req: Request, res: Response) => {
         }
 
         if (sortType == "recent") {
-            popularExhibitionList = await exhibitionService.getEntireCategoryExhibitionDefault(client, category, userId);
+            popularExhibitionList = await exhibitionService.getEntireCategoryExhibitionDefault(client, category);
         } else if (sortType == "like") {
-            popularExhibitionList = await exhibitionService.getEntireCategoryExhibitionByLike(client, category, userId);
+            popularExhibitionList = await exhibitionService.getEntireCategoryExhibitionByLike(client, category);
         } else {
             res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INCORRECT_SORT));
         }
@@ -39,6 +41,11 @@ export default async (req: Request, res: Response) => {
 
         let popularExhibitionPostList = await Promise.all(popularExhibitionList.map(async (exhibitionData: any) => {
             let artistData = await userService.findUserById(client, exhibitionData.userId);
+            const likeCount = await likeService.getLikeCount(client, exhibitionData.id);
+            const isLiked = await likeService.getIsLiked(client, exhibitionData.id, userId); 
+            const bookmarkCount = await bookmarkService.getBookmarkCount(client, exhibitionData.id);
+            const isBookmarked = await bookmarkService.getIsBookmarked(client, exhibitionData.id, userId);
+    
             let data = {
                 exhibitionId: exhibitionData.id,
                 title: exhibitionData.title,
@@ -50,12 +57,12 @@ export default async (req: Request, res: Response) => {
                     nickname: artistData.nickname,
                 },
                 like: {
-                    isLiked: exhibitionData.isLiked == 1? true : false,
-                    likeCount: parseInt(exhibitionData.likeCount)
+                    isLiked: isLiked.isLiked == 1? true : false,
+                    likeCount: parseInt(likeCount.likeCount)
                 },
                 bookmark: {
-                    isBookmarked: exhibitionData.isBookmarked == 1? true : false,
-                    bookmarkCount: parseInt(exhibitionData.bookmarkCount)
+                    isBookmarked: isBookmarked.isBookmarked == 1? true : false,
+                    bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
                 }
             }
             return data;
