@@ -38,6 +38,8 @@ module.exports = {
 
     // 마이페이지
     READ_MYPAGE_SUCCESS: "마이페이지 조회 성공",
+    READ_MYPAGE_BOOKMARK_SUCCESS: "마이페이지 북마크 리스트 조회 성공",
+    READ_MYPAGE_EXHIBITION_SUCCESS: "마이페이지 등록한 전시 리스트 조회 성공",
 
     // 프로필 조회
     READ_PROFILE_SUCCESS: "프로필 조회 성공",
