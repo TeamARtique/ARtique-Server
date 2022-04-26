@@ -44,13 +44,13 @@ const getMyBookmarkedData = async (client: any, userId: number) => {
         `
         SELECT e.*
         FROM "exhibition" e
-        INNER JOIN "bookmark" b
+        LEFT JOIN "bookmark" b
         ON e.id = b.exhibition_id
         AND b.user_id = $1
         AND b.is_deleted = false
         AND e.is_deleted = false
         AND e.is_public = true
-        ORDER BY e.created_at desc
+        ORDER BY b.updated_at desc
         LIMIT 6
         `,
         [userId]
@@ -80,13 +80,13 @@ const getMyEntireBookmarkedData = async (client: any, userId: number) => {
         `
         SELECT e.*
         FROM "exhibition" e
-        INNER JOIN "bookmark" b
+        LEFT JOIN "bookmark" b
         ON e.id = b.exhibition_id
         AND b.user_id = $1
         AND b.is_deleted = false
         AND e.is_deleted = false
         AND e.is_public = true
-        ORDER BY e.created_at desc
+        ORDER BY b.updated_at desc
         `,
         [userId]
     );
