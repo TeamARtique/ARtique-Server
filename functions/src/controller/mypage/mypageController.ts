@@ -87,7 +87,7 @@ export default async (req: Request, res: Response) => {
             user: {
                 nickname: userData.nickname,
                 profileImage: userData.profileImage,
-                description: userData.description,
+                introduction: userData.introduction,
                 website: userData.website,
                 exhibitionCount: userData.exhibitionCount,
                 ticketCount: userData.ticketCount
