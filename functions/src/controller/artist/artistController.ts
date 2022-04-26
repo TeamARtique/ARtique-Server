@@ -20,7 +20,6 @@ export default async (req: Request, res: Response) => {
 
     try {
         client = await db.connect(req);
-        console.log(artistId);
         let artistData = await userService.findUserById(client, artistId);
         let exhibitionData = await mypageService.getMyExhibitionData(client, artistId);
 

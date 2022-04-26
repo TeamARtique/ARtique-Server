@@ -1,4 +1,4 @@
-// const _ = require("lodash");
+import userProfileDTO from "../interface/req/userProfileDTO";
 const convertSnakeToCamel = require('../lib/convertSnakeToCamel');
 
 // ✅ 아이디값으로 유저 찾기
@@ -84,9 +84,29 @@ const updateRefreshToken = async (
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 유저 정보 수정
+const updateUser = async (client: any, userId: number, userProfileDTO: userProfileDTO) => {
+  const { rows } = await client.query(
+    `
+    UPDATE "user" u
+    SET profile_image = $2,
+        nickname = $3,
+        introduction = $4,
+        website = $5
+    WHERE u.id = $1
+    RETURNING *
+
+    `,
+    [userId, userProfileDTO.profileImage, userProfileDTO.nickname, userProfileDTO.introduction, userProfileDTO.website],
+  );
+  console.log(convertSnakeToCamel.keysToCamel(rows[0]));
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
   findUserById,
   findUserByEmail,
   createUser,
-  updateRefreshToken
+  updateRefreshToken,
+  updateUser,
 }
