@@ -19,6 +19,11 @@ export default async (req: Request, res: Response) => {
     let userId = req.body.user.id;
     try {
         client = await db.connect(req);
+
+        if (category == null || category < 1 || category > 6) {
+            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INCORRECT_CATEGORY));
+        }
+        
         const categoryExhibitionList = await exhibitionService.getMainExhibitionByCategory(client, category);
         if (!categoryExhibitionList) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
