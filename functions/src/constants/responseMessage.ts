@@ -42,18 +42,9 @@ module.exports = {
     READ_MYPAGE_EXHIBITION_SUCCESS: "마이페이지 등록한 전시 리스트 조회 성공",
     READ_ARTISTPAGE_SUCCESS: "작가페이지 조회 성공",
 
-    // 프로필 조회
-    READ_PROFILE_SUCCESS: "프로필 조회 성공",
-
     // 프로필 수정
     USER_PROFILE_UPDATE_SUCCESS: "프로필 수정 성공",
 
-    // 유저 수정
-    USER_UPDATE_SUCCESS: "유저 정보 수정 성공",
-
     // 유저 삭제 성공
-    USER_DELETE_SUCCESS: "유저 삭제 성공",
-
-    // 유저 조회
-    READ_ALL_USERS_SUCCESS: "유저 조회 성공"
+    USER_DELETE_SUCCESS: "회원 탈퇴 성공",
 };
