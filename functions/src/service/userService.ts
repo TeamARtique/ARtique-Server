@@ -32,9 +32,9 @@ const findUserByEmail = async (client: any, email: string) => {
 const findUserByRefreshToken = async (client: any, refreshToken: string) => {
   const { rows } = await client.query(
     `
-      SELECT u.*
-      FROM "user" u
-      WHERE u.refresh_token = $1
+      SELECT id as user_id, email, nickname 
+      FROM "user"
+      WHERE refresh_token = $1
       AND is_deleted = false
       `,
     [refreshToken],

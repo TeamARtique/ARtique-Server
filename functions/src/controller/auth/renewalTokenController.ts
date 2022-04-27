@@ -33,12 +33,17 @@ export default async (req: Request, res: Response) => {
         } 
 
         // ✅ 엑세스토큰 갱신
-        const findUser = userService.findUserByRefreshToken(client, refreshToken);
-        const jwtToken = jwtHandlers.access(findUser);
-        let tokenData = {
-            token: {
-                accessToken: jwtToken.accesstoken,
-                refreshToken: refreshToken
+        let findUser = await userService.findUserByRefreshToken(client, refreshToken);
+        let tokenData;
+        if (!findUser) {
+            return res.status(statusCode.UNAUTHORIZED).send(util.fail(statusCode.UNAUTHORIZED, responseMessage.TOKEN_INVALID));
+        } else {
+            const jwtToken = jwtHandlers.access(findUser);
+            tokenData = {
+                token: {
+                    accessToken: jwtToken.accesstoken,
+                    refreshToken: refreshToken
+                }
             }
         }
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.TOKEN_RENEWAL_SUCCESS, tokenData));
