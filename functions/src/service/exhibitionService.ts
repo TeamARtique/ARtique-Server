@@ -59,6 +59,9 @@ const getEntireCategoryExhibitionByLike = async (client: any, category: number) 
     `
     SELECT e.*
     FROM "exhibition" e
+    LEFT OUTER JOIN "like" l
+    ON e.id = l.exhibition_id
+    AND l.is_deleted = false
     WHERE e.category = $1
     AND e.is_public = true
     AND e.is_deleted = false
