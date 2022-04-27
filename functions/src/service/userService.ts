@@ -28,6 +28,20 @@ const findUserByEmail = async (client: any, email: string) => {
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ refreshToken값으로 유저 찾기
+const findUserByRefreshToken = async (client: any, refreshToken: string) => {
+  const { rows } = await client.query(
+    `
+      SELECT u.*
+      FROM "user" u
+      WHERE u.refresh_token = $1
+      AND is_deleted = false
+      `,
+    [refreshToken],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 // ✅ 유저 생성
 const createUser = async (
   client: any,        
@@ -123,4 +137,5 @@ export default {
   updateRefreshToken,
   updateUser,
   deleteUser,
+  findUserByRefreshToken,
 }

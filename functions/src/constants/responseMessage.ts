@@ -7,6 +7,7 @@ module.exports = {
     TOKEN_EXPIRED: "만료된 토큰입니다",
     TOKEN_INVALID: "유효하지 않은 토큰입니다",
     TOKEN_EMPTY: "토큰이 없습니다",
+    TOKEN_RENEWAL_SUCCESS: "토큰 갱신 완료",
     INCORRECT_CATEGORY: "올바르지 않은 카테고리 아이디입니다.",
     INCORRECT_SORT: "정렬값이 잘못되었습니다.",
 

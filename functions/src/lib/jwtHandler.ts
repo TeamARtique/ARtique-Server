@@ -29,7 +29,7 @@ const refresh = () => {
   const result = {
     refreshtoken: jwt.sign({}, secretKey, {
       algorithm: "HS256",
-      expiresIn: "14d",
+      expiresIn: "30d",
       issuer: "artique",
     }),
   };

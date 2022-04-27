@@ -58,8 +58,10 @@ export default async (req: Request, res: Response) => {
 
             let signData = {
                 user: newUser,
-                accessToken: jwtAccessToken.accesstoken,
-                refreshToken: jwtRefreshtoken.refreshtoken
+                token: {
+                    accessToken: jwtAccessToken.accesstoken,
+                    refreshToken: jwtRefreshtoken.refreshtoken
+                }
             }
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CREATED_USER, signData));
         }
@@ -69,8 +71,10 @@ export default async (req: Request, res: Response) => {
         userService.updateRefreshToken(client, findUser.userId, jwtRefreshtoken.refreshtoken);
         let loginData = {
             user: findUser,
-            accessToken: jwtToken.accesstoken,
-            refreshToken: jwtRefreshtoken.refreshtoken
+            token: {
+                accessToken: jwtToken.accesstoken,
+                refreshToken: jwtRefreshtoken.refreshtoken
+            }
         }
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, loginData));
     } catch (error: any) {
