@@ -76,10 +76,26 @@ const updateLikeByExhibitionId = async (client: any, exhibitionId: number, userI
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+
+// ✅ 좋아요 삭제(회원 탈퇴시)
+const deleteLikeByUserId = async (client: any, userId: number) => {
+  const { rows } = await client.query(
+    `
+    UPDATE "like" l
+    SET is_deleted = true, updated_at = now()
+    WHERE l.user_id = $1
+    RETURNING is_deleted
+    `,
+    [userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
     getLikeCount,
     getIsLiked,
     getLikeByExhibitionId,
     createLikeByExhibitionId,
     updateLikeByExhibitionId,
+    deleteLikeByUserId,
 };

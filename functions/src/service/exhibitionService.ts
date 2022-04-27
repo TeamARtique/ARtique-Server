@@ -33,7 +33,6 @@ const getMainPopularExhibitionByCategory = async (client: any, category: number)
     `,
     [category]
   );
-  console.log("result: ", convertSnakeToCamel.keysToCamel(rows));
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
@@ -119,6 +118,20 @@ const deleteExhibition = async (client: any, exhibitionId: number) => {
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 전시 삭제(회원 탈퇴시)
+const deleteExhibitionByUserId = async (client: any, userId: number) => {
+  const { rows } = await client.query(
+    `
+    UPDATE "exhibition" e
+    SET is_deleted = true, updated_at = now()
+    WHERE e.user_id = $1
+    RETURNING true
+    `,
+    [userId],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
   getMainExhibitionByCategory,
   getMainPopularExhibitionByCategory,
@@ -127,4 +140,5 @@ export default {
   getDetailExhibition,
   putEditDetailExhibition,
   deleteExhibition,
+  deleteExhibitionByUserId,
 };

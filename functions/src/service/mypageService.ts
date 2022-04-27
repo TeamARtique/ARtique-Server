@@ -18,7 +18,6 @@ const getMypageUserData = async (client: any, userId: number) => {
         `,
         [userId]
     );
-    console.log(convertSnakeToCamel.keysToCamel(rows[0]));
     return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
@@ -44,7 +43,7 @@ const getMyBookmarkedData = async (client: any, userId: number) => {
         `
         SELECT e.*
         FROM "exhibition" e
-        LEFT JOIN "bookmark" b
+        INNER JOIN "bookmark" b
         ON e.id = b.exhibition_id
         AND b.user_id = $1
         AND b.is_deleted = false
@@ -80,7 +79,7 @@ const getMyEntireBookmarkedData = async (client: any, userId: number) => {
         `
         SELECT e.*
         FROM "exhibition" e
-        LEFT JOIN "bookmark" b
+        INNER JOIN "bookmark" b
         ON e.id = b.exhibition_id
         AND b.user_id = $1
         AND b.is_deleted = false

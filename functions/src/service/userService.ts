@@ -99,7 +99,20 @@ const updateUser = async (client: any, userId: number, userProfileDTO: userProfi
     `,
     [userId, userProfileDTO.profileImage, userProfileDTO.nickname, userProfileDTO.introduction, userProfileDTO.website],
   );
-  console.log(convertSnakeToCamel.keysToCamel(rows[0]));
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
+// ✅ 유저 삭제(회원 탈퇴)
+const deleteUser = async (client: any, userId: number) => {
+  const { rows } = await client.query(
+    `
+    UPDATE "user" u
+    SET is_deleted = true
+    WHERE u.id = $1
+    RETURNING is_deleted
+    `,
+    [userId],
+  );
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
@@ -109,4 +122,5 @@ export default {
   createUser,
   updateRefreshToken,
   updateUser,
+  deleteUser,
 }

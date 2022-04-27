@@ -75,10 +75,26 @@ const updateBookmarkByExhibitionId = async (client: any, exhibitionId: number, u
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 북마크 삭제(회원 탈퇴시)
+const deleteBookmarkByUserId = async (client: any, userId: number) => {
+  const { rows } = await client.query(
+    `
+    UPDATE "bookmark" b
+    SET is_deleted = true, updated_at = now()
+    WHERE b.user_id = $1
+    RETURNING true
+    `,
+    [userId],
+  );
+  console.log(convertSnakeToCamel.keysToCamel(rows[0]));
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
     getBookmarkCount,
     getIsBookmarked,
     getBookmarkByExhibitionId,
     createBookmarkByExhibitionId,
     updateBookmarkByExhibitionId,
+    deleteBookmarkByUserId,
 };
