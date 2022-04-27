@@ -40,10 +40,8 @@ export default async (req: Request, res: Response) => {
         } else {
             const jwtToken = jwtHandlers.access(findUser);
             tokenData = {
-                token: {
-                    accessToken: jwtToken.accesstoken,
-                    refreshToken: refreshToken
-                }
+                accessToken: jwtToken.accesstoken,
+                refreshToken: refreshToken
             }
         }
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.TOKEN_RENEWAL_SUCCESS, tokenData));
