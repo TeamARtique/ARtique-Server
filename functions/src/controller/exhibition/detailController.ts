@@ -55,6 +55,7 @@ export default async (req: Request, res: Response) => {
                 artistId: exhibitionDetailData.userId,
                 isWriter: userId == exhibitionDetailData.userId ? true : false,
                 nickname: artistData.nickname,
+                profileImage: artistData.profileImage
             },
             like: {
                 isLiked: isLiked.isLiked == 1? true : false,
