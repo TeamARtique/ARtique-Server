@@ -38,6 +38,7 @@ export default async (req: Request, res: Response) => {
                 title: bookmarkData.title,
                 posterImage: bookmarkData.posterImage,
                 posterTheme: bookmarkData.posterTheme,
+                createdAt: bookmarkData.createdAt,
                 artist: {
                     artistId: bookmarkData.userId,
                     nickname: artistData.nickname,
