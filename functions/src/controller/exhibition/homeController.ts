@@ -74,6 +74,7 @@ export default async (req: Request, res: Response) => {
                 title: categoryData.title,
                 posterImage: categoryData.posterImage,
                 posterTheme: categoryData.posterTheme,
+                createdAt: categoryData.createdAt,
                 artist: {
                     artistId: categoryData.userId,
                     nickname: artistData.nickname,
@@ -86,7 +87,6 @@ export default async (req: Request, res: Response) => {
                     isBookmarked: isBookmarked.isBookmarked == 1? true : false,
                     bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
                 },
-                createdAt: categoryData.createdAt
             }
             return data;
         }));
