@@ -24,11 +24,6 @@ export default async (req: Request, res: Response) => {
             res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.INCORRECT_CATEGORY));
         }
         
-        const categoryExhibitionList = await exhibitionService.getMainExhibitionByCategory(client, category);
-        if (!categoryExhibitionList) {
-            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
-        }
-        
         let popularExhibitionList = await exhibitionService.getMainPopularExhibitionByCategory(client, category);
         if (!popularExhibitionList) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
@@ -62,10 +57,44 @@ export default async (req: Request, res: Response) => {
             return data;
         }));
 
+        let categoryExhibitionList = await exhibitionService.getMainExhibitionByCategory(client, category);
+        if (!categoryExhibitionList) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
+
+        let categoryExhibitionPostList = await Promise.all(categoryExhibitionList.map(async (categoryData: any) => {
+            let artistData = await userService.findUserById(client, categoryData.userId);
+            const likeCount = await likeService.getLikeCount(client, categoryData.id);
+            const isLiked = await likeService.getIsLiked(client, categoryData.id, userId); 
+            const bookmarkCount = await bookmarkService.getBookmarkCount(client, categoryData.id);
+            const isBookmarked = await bookmarkService.getIsBookmarked(client, categoryData.id, userId);
+
+            let data = {
+                exhibitionId: categoryData.id,
+                title: categoryData.title,
+                posterImage: categoryData.posterImage,
+                posterTheme: categoryData.posterTheme,
+                artist: {
+                    artistId: categoryData.userId,
+                    nickname: artistData.nickname,
+                },
+                like: {
+                    isLiked: isLiked.isLiked == 1? true : false,
+                    likeCount: parseInt(likeCount.likeCount)
+                },
+                bookmark: {
+                    isBookmarked: isBookmarked.isBookmarked == 1? true : false,
+                    bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
+                },
+                createdAt: categoryData.createdAt
+            }
+            return data;
+        }));
+
         let mainData = {
             forArtiExhibition: popularExhibitionPostList,
             popularExhibition: popularExhibitionPostList,
-            categoryExhibition: [categoryExhibitionList]
+            categoryExhibition: categoryExhibitionPostList
         }
         res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.READ_EXHIBITION_MAIN_SUCCESS, mainData));
     } catch (error) {

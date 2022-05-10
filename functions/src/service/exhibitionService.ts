@@ -5,7 +5,7 @@ import exhibitionDTO from '../interface/req/exhibitionDTO';
 const getMainExhibitionByCategory = async (client: any, category: number) => {
   const { rows } = await client.query(
     `
-    SELECT e.id as exhibition_id, e.title, e.poster_image, e.poster_theme, e.created_at
+    SELECT e.*
     FROM "exhibition" e
     WHERE e.category = $1
     AND e.is_public = true
