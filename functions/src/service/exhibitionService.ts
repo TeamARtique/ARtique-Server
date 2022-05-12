@@ -132,6 +132,36 @@ const deleteExhibitionByUserId = async (client: any, userId: number) => {
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 전시 생성
+const createExhibition = async (
+  client: any,        
+  userId: string,
+  gallerySize: number,
+  galleryTheme: number,
+  exhibition: exhibitionDTO
+) => {
+  const { rows } = await client.query(
+    `
+      INSERT INTO "exhibition"
+      (user_id, gallery_size, theme, title, category, poster_image, description, tag, is_public)
+      VALUES
+      ($1, $2, $3, $4, $5, $6, $7, ARRAY${exhibition.tag}, $8)
+      RETURNING id as exhibition_id, gallery_size, theme, title, category, poster_image, description, tag, is_public
+      `,
+    [
+      userId,
+      gallerySize,
+      galleryTheme,
+      exhibition.title,
+      exhibition.category,
+      exhibition.posterImage,
+      exhibition.description,
+      exhibition.isPublic
+    ],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
   getMainExhibitionByCategory,
   getMainPopularExhibitionByCategory,
@@ -141,4 +171,5 @@ export default {
   putEditDetailExhibition,
   deleteExhibition,
   deleteExhibitionByUserId,
+  createExhibition,
 };
