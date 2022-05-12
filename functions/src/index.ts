@@ -18,6 +18,7 @@ if (admin.apps.length === 0) {
 import express = require('express');
 import { Request, Response, NextFunction } from 'express';
 import cors = require('cors');
+import bodyParser = require('body-parser');
 
 const cookieParser = require('cookie-parser');
 const hpp = require('hpp');
@@ -40,6 +41,8 @@ if (process.env.NODE_ENV === "production") {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 // 라우팅
 app.use("/auth", require("./api/auth"));
