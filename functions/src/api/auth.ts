@@ -3,6 +3,7 @@ import kakaoController from '../controller/auth/kakaoController';
 import renewalTokenController from '../controller/auth/renewalTokenController';
 const router = express.Router();
 
+/* [POST] */
 router.post('/kakaoLogin', kakaoController);
 router.post('/token', renewalTokenController);
 

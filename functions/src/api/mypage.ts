@@ -6,10 +6,12 @@ import editProfileController from '../controller/mypage/editProfileController';
 const { checkUser } = require("../middleware/auth");
 const router = express.Router();
 
+/* [GET] */
 router.get('', checkUser, mypageController);
 router.get('/bookmark', checkUser, myEntireBookmarkController);
 router.get('/exhibition', checkUser, myEntireExhibitionController);
 
+/* [PUT] */
 router.put('/profile', checkUser, editProfileController);
 
 module.exports = router;
