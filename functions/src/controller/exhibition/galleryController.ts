@@ -37,9 +37,7 @@ export default async (req: Request, res: Response) => {
                 galleryTheme: galleryDetailData.theme,
                 isPublic: galleryDetailData.isPublic,
             },
-            artworks: {
-                artworkData
-            },
+            artworks: artworkData,
             like: {
                 isLiked: isLiked.isLiked == 1? true : false,
                 likeCount: parseInt(likeCount.likeCount)
