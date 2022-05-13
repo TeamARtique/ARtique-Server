@@ -14,6 +14,33 @@ const getArtworks = async (client: any, exhibitionid: number) => {
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+// ✅ 전시작품 생성
+const createArtwork = async (
+  client: any,        
+  exhibitionId: number,
+  image: string,
+  title: string,
+  description: string
+) => {
+  const { rows } = await client.query(
+    `
+      INSERT INTO "artwork"
+      (exhibition_id, image, description, title)
+      VALUES
+      ($1, $2, $3, $4)
+      RETURNING *
+      `,
+    [
+      exhibitionId,
+      image,
+      title,
+      description
+    ],
+  );
+  return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
     getArtworks,
+    createArtwork,
 };
