@@ -4,6 +4,7 @@ import myEntireBookmarkController from '../controller/mypage/myEntireBookmarkCon
 import myEntireExhibitionController from '../controller/mypage/myEntireExhibitionController';
 import editProfileController from '../controller/mypage/editProfileController';
 const { checkUser } = require("../middleware/auth");
+const { uploadProfileImage } = require("../middleware/uploadProfileImage")
 const router = express.Router();
 
 /* [GET] */
@@ -12,6 +13,6 @@ router.get('/bookmark', checkUser, myEntireBookmarkController);
 router.get('/exhibition', checkUser, myEntireExhibitionController);
 
 /* [PUT] */
-router.put('/profile', checkUser, editProfileController);
+router.put('/profile', checkUser, uploadProfileImage, editProfileController);
 
 module.exports = router;

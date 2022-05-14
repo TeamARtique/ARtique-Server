@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import userService from "../../service/userService";
 import userProfileDTO from '../../interface/req/userProfileDTO';
 const db = require('../../db/db');
@@ -11,19 +10,28 @@ const util = require("../../lib/util");
  *  @desc PUT edit user data (유저의 프로필(정보) 수정)
  *  @access Private
  */
-export default async (req: Request, res: Response) => {
+export default async (req: any, res: any) => {
     let client: any;
     let userId = req.body.user.id;
-    if (!userId || !req.body.profileImage || !req.body.nickname || !req.body.introduction || !req.body.website) {
+    let fields = req.body.fields;
+    let profileImage = req.body.imageUrls;
+    if (!userId || !fields['nickname']) {
         res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
+        return;
+    }
+
+    console.log(profileImage);
+
+    if (profileImage.length == 0) {
+        profileImage.push("https://firebasestorage.googleapis.com/v0/b/artique-34e8e.appspot.com/o/ARtique_default%2Farti_default.png?alt=media&token=07648fa7-da95-4381-b7fd-580e47eeec1f");
     }
 
     // body
     const exhibitionData: userProfileDTO = {
-        profileImage: req.body.profileImage,
-        nickname: req.body.nickname, 
-        introduction: req.body.introduction,
-        website: req.body.website
+        profileImage: profileImage[0],
+        nickname: fields['nickname'], 
+        introduction: fields['introduction'],
+        website: fields['website']
     };
     
     try {
