@@ -25,10 +25,10 @@ const createArtwork = async (
   const { rows } = await client.query(
     `
       INSERT INTO "artwork"
-      (exhibition_id, image, description, title)
+      (exhibition_id, image, title, description)
       VALUES
       ($1, $2, $3, $4)
-      RETURNING *
+      RETURNING id as artwork_id, image, title, description
       `,
     [
       exhibitionId,
