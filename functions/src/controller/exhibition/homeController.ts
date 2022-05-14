@@ -40,7 +40,6 @@ export default async (req: Request, res: Response) => {
                 exhibitionId: popularData.id,
                 title: popularData.title,
                 posterImage: popularData.posterImage,
-                posterTheme: popularData.posterTheme,
                 artist: {
                     artistId: popularData.userId,
                     nickname: artistData.nickname,
@@ -73,7 +72,6 @@ export default async (req: Request, res: Response) => {
                 exhibitionId: categoryData.id,
                 title: categoryData.title,
                 posterImage: categoryData.posterImage,
-                posterTheme: categoryData.posterTheme,
                 createdAt: categoryData.createdAt,
                 artist: {
                     artistId: categoryData.userId,

@@ -41,15 +41,13 @@ export default async (req: Request, res: Response) => {
                 exhibitionId: exhibitionDetailData.id,
                 title: exhibitionDetailData.title,
                 posterImage: exhibitionDetailData.posterImage,
-                posterTheme: exhibitionDetailData.posterTheme,
                 description: exhibitionDetailData.description,
                 tag: exhibitionDetailData.tag,
                 category: exhibitionDetailData.category,
                 gallerySize: exhibitionDetailData.gallerySize,
                 galleryTheme: exhibitionDetailData.theme,
                 isPublic: exhibitionDetailData.isPublic,
-                createdAt: exhibitionDetailData.createdAt,
-                isDeleted: exhibitionDetailData.isDeleted
+                createdAt: exhibitionDetailData.createdAt
             },
             artist: {
                 artistId: exhibitionDetailData.userId,

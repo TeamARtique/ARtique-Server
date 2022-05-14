@@ -50,7 +50,6 @@ export default async (req: Request, res: Response) => {
                 exhibitionId: exhibitionData.id,
                 title: exhibitionData.title,
                 posterImage: exhibitionData.posterImage,
-                posterTheme: exhibitionData.posterTheme,
                 createdAt: exhibitionData.createdAt,
                 artist: {
                     artistId: exhibitionData.userId,

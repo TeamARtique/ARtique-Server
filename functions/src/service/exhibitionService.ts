@@ -28,6 +28,7 @@ const getMainPopularExhibitionByCategory = async (client: any, category: number)
     ON e.id = l.exhibition_id
     AND l.is_deleted = false
     WHERE e.category = $1
+    AND e.is_public = true
     AND e.is_deleted = false
     GROUP BY e.id ORDER BY count(l.exhibition_id) DESC LIMIT 6
     `,
@@ -78,6 +79,7 @@ const getDetailExhibition = async (client: any, exhibitionid: number) => {
     SELECT e.*
     FROM "exhibition" e
     WHERE e.id = $1
+    AND e.is_deleted = false
     `,
     [exhibitionid]
   );
@@ -91,15 +93,14 @@ const putEditDetailExhibition = async (client: any, exhibitionId: number, exhibi
     UPDATE exhibition e
     SET title = $2, 
         category = $3, 
-        poster_image = $4, 
-        poster_theme = $5, 
-        description = $6,
+        poster_image = $4,
+        description = $5,
         tag = ARRAY[${exhibition.tag}], 
-        is_public = $7
+        is_public = $6
     WHERE e.id = $1
     RETURNING *
     `,
-    [exhibitionId, exhibition.title, exhibition.category, exhibition.posterImage, exhibition.posterTheme, exhibition.description, exhibition.isPublic]
+    [exhibitionId, exhibition.title, exhibition.category, exhibition.posterImage, exhibition.description, exhibition.isPublic]
   );
   return convertSnakeToCamel.keysToCamel(rows[0]);
 };
@@ -146,7 +147,7 @@ const createExhibition = async (
       (user_id, gallery_size, theme, title, category, poster_image, description, tag, is_public)
       VALUES
       ($1, $2, $3, $4, $5, $6, $7, ARRAY${exhibition.tag}, $8)
-      RETURNING id as exhibition_id, gallery_size, theme, title, category, poster_image, description, tag, is_public
+      RETURNING id as exhibition_id, gallery_size, theme, title, category, poster_image, description, tag, is_public, created_at, is_deleted
       `,
     [
       userId,

@@ -18,7 +18,7 @@ export default async (req: Request, res: Response) => {
     let client: any;
     let exhibitionId = parseInt(req.params.exhibitionId);
     let userId = req.body.user.id;
-    if (!exhibitionId || !userId || !req.body.title || !req.body.category || !req.body.posterImage || !req.body.posterTheme || !req.body.description || !req.body.tag || !req.body.isPublic) {
+    if (!exhibitionId || !userId || !req.body.title || !req.body.category || !req.body.posterImage || !req.body.description || !req.body.tag || !req.body.isPublic) {
         res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
     }
 
@@ -27,7 +27,6 @@ export default async (req: Request, res: Response) => {
         title: req.body.title,
         category: req.body.category, 
         posterImage: req.body.posterImage,
-        posterTheme: req.body.posterTheme,
         description: req.body.description,
         tag: req.body.tag,
         isPublic: req.body.isPublic
@@ -53,7 +52,6 @@ export default async (req: Request, res: Response) => {
                 exhibitionId: exhibitionEditData.id,
                 title: exhibitionEditData.title,
                 posterImage: exhibitionEditData.posterImage,
-                posterTheme: exhibitionEditData.posterTheme,
                 description: exhibitionEditData.description,
                 tag: exhibitionEditData.tag,
                 isPublic: exhibitionEditData.isPublic,
