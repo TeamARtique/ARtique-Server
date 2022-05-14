@@ -44,11 +44,11 @@ export default async (req: Request, res: Response) => {
                     nickname: artistData.nickname,
                 },
                 like: {
-                    isLiked: isLiked.isLiked == 1? true : false,
+                    isLiked: isLiked.isLiked == 1 ? true : false,
                     likeCount: parseInt(likeCount.likeCount)
                 },
                 bookmark: {
-                    isBookmarked: isBookmarked.isBookmarked == 1? true : false,
+                    isBookmarked: isBookmarked.isBookmarked == 1 ? true : false,
                     bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
                 }
             }
@@ -72,11 +72,11 @@ export default async (req: Request, res: Response) => {
                     nickname: artistData.nickname,
                 },
                 like: {
-                    isLiked: isLiked.isLiked == 1? true : false,
+                    isLiked: isLiked.isLiked == 1 ? true : false,
                     likeCount: parseInt(likeCount.likeCount)
                 },
                 bookmark: {
-                    isBookmarked: isBookmarked.isBookmarked == 1? true : false,
+                    isBookmarked: isBookmarked.isBookmarked == 1 ? true : false,
                     bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
                 }
             }
@@ -89,8 +89,8 @@ export default async (req: Request, res: Response) => {
                 profileImage: userData.profileImage,
                 introduction: userData.introduction,
                 website: userData.website,
-                exhibitionCount: userData.exhibitionCount,
-                ticketCount: userData.ticketCount
+                exhibitionCount: parseInt(userData.exhibitionCount),
+                ticketCount: parseInt(userData.ticketCount)
             },
             myExhibition: myExhibitionPostList,
             myBookmarkedData: myBookmarkPostList
