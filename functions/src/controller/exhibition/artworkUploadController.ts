@@ -14,7 +14,7 @@ export default async (req: any, res: any) => {
     let fields = req.body.fields;
     let artworks = req.body.imageUrls;
     let exhbitionId = req.params.exhibitionId;
-    if (!exhbitionId || !artworks[0] || !fields['index'] || !fields['title'] || !fields['description']) {
+    if (!exhbitionId || !artworks[0] || !fields['index']) {
         res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
         return;
     }
