@@ -13,36 +13,20 @@ const responseMessage = require("../constants/responseMessage");
 
 const uploadImage = async (req: any, res: any, next: NextFunction) => {
     const busboy = BusBoy({ headers: req.headers });
-    //console.log(busboy)
     let imageFileName: any = {};
     let imagesToUpload: any = [];
     let imageToAdd: any = {};
     let imageUrls: any = [];
     let fields: any = {};
-    let artworkTitleArr: any = [];
-    let artworkDescArr: any = [];
-    let posterImageArr: any = [];
-    let artworkImageArr: any = [];
 
     // req.body로 들어오는 key:value 페어들을 처리
     busboy.on('field', (fieldname: string, val: string, info: BusBoy.FieldInfo) => {
         fields[fieldname] = val;
-        if(fieldname === 'artworkTitle') {
-            artworkTitleArr.push(val);
-        }
-        if(fieldname === 'artworkDescription') {
-            artworkDescArr.push(val);
-        }
     });
 
     // req.body로 들어오는 게 파일일 경우 처리
     busboy.on("file", (name: any, file: any, info: any) => {
         const { filename, mimeType } = info;
-        if (name == 'posterImage') {
-            posterImageArr.push(name)
-        } else if (name == 'artworkImage') {
-            artworkImageArr.push(name)
-        }
 
         if (mimeType !== "image/jpeg" && mimeType !== "image/png") {
             return res.status(400).json({ error: "Wrong file type submitted" });
@@ -68,50 +52,39 @@ const uploadImage = async (req: any, res: any, next: NextFunction) => {
     // req.body로 들어온 파일들을 Firebase Storage에 업로드
     busboy.on("finish", async () => {
         let promises: any = [];
-
-        if (posterImageArr.length != 1) {
-            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
-            return;
-        } else if (artworkImageArr.length != fields['gallerySize']) {
-            res.status(statusCode.BAD_REQUEST).send(util.fail(statusCode.BAD_REQUEST, responseMessage.OUT_OF_VALUE));
-            return;
-        } else {
-            imagesToUpload.forEach((imageToBeUploaded: any) => {
-                imageUrls.push(
-                    `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageToBeUploaded.imageFileName}?alt=media`,
-                );
-                promises.push(
-                    admin
-                    .storage()
-                    .bucket(firebaseConfig.storageBucket)
-                    .upload(imageToBeUploaded.filepath, {
-                        resumable: false,
+        imagesToUpload.forEach((imageToBeUploaded: any) => {
+            imageUrls.push(
+                `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageToBeUploaded.imageFileName}?alt=media`,
+            );
+            promises.push(
+                admin
+                .storage()
+                .bucket(firebaseConfig.storageBucket)
+                .upload(imageToBeUploaded.filepath, {
+                    resumable: true,
+                    metadata: {
                         metadata: {
-                            metadata: {
-                                contentType: imageToBeUploaded.mimetype,
-                            },
+                            contentType: imageToBeUploaded.mimetype,
                         },
-                    }),
-                    );
-                });
-                try {
-                    await Promise.all(promises);
-                        req.body.fields = fields;
-                        req.body.imageUrls = imageUrls;
-                        req.body.fields.artworkTitle = artworkTitleArr;
-                        req.body.fields.artworkDescription = artworkDescArr;
-                        next();
-                        return;
-                } catch (err) {
-                    console.error(err);
-                    functions.logger.error(
-                        `[FILE UPLOAD ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`,
-                    );
-                    return res
-                        .status(500)
-                        .json(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
-                }
-        }
+                    },
+                }),
+                );
+            });
+            try {
+                await Promise.all(promises);
+                    req.body.fields = fields;
+                    req.body.imageUrls = imageUrls;
+                    next();
+                    return;
+            } catch (err) {
+                console.error(err);
+                functions.logger.error(
+                    `[FILE UPLOAD ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`,
+                );
+                return res
+                    .status(500)
+                    .json(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+            }
     });
     busboy.end(req.rawBody);  
 };  

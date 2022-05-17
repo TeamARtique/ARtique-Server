@@ -4,7 +4,9 @@ import detailController from '../controller/exhibition/detailController';
 import entireController from '../controller/exhibition/entireListController';
 import editController from '../controller/exhibition/editController';
 import deleteController from '../controller/exhibition/deleteController';
-import uploadController from '../controller/exhibition/uploadController';
+import exhibitionUploadController from '../controller/exhibition/exhibitionUploadController';
+import artworkUploadController from '../controller/exhibition/artworkUploadController';
+import uploadCheckontroller from '../controller/exhibition/createCheckController';
 const { checkUser } = require("../middleware/auth");
 const { uploadImage } = require("../middleware/uploadImage")
 const router = express.Router();
@@ -13,9 +15,11 @@ const router = express.Router();
 router.get('/main/:category', checkUser, homeController);
 router.get('/:exhibitionId', checkUser, detailController);
 router.get('/list/:category', checkUser, entireController);
+router.get('/create/success/:exhibitionId', checkUser, uploadCheckontroller);
 
 /* [POST] */
-router.post('/', checkUser, uploadImage, uploadController);
+router.post('/', checkUser, uploadImage, exhibitionUploadController);
+router.post('/artwork/:exhibitionId', checkUser, uploadImage, artworkUploadController);
 
 /* [PUT] */
 router.put('/:exhibitionId', checkUser, editController);
