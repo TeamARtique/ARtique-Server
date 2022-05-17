@@ -44,7 +44,7 @@ export default async (req: any, res: any) => {
                 tag: uploadExhibitionData.tag,
                 category: uploadExhibitionData.category,
                 gallerySize: uploadExhibitionData.gallerySize,
-                galleryTheme: uploadExhibitionData.galleryTheme,
+                galleryTheme: uploadExhibitionData.theme,
                 isPublic: uploadExhibitionData.isPublic,
                 createdAt: uploadExhibitionData.createdAt
             }
