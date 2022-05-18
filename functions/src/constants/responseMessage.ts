@@ -46,6 +46,11 @@ module.exports = {
     READ_MYPAGE_EXHIBITION_SUCCESS: "마이페이지 등록한 전시 리스트 조회 성공",
     READ_ARTISTPAGE_SUCCESS: "작가페이지 조회 성공",
 
+    // 티켓북
+    READ_TICKETBOOK_SUCCESS: "티켓북 조회 성공",
+    CREATE_TICKETBOOK_SUCCESS: "티켓북 생성 성공",
+    DELETE_TICKETBOOK_SUCCESS: "티켓북 삭제 성공",
+
     // 프로필 수정
     USER_PROFILE_UPDATE_SUCCESS: "프로필 수정 성공",
 
