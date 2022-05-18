@@ -55,6 +55,38 @@ export default async (req: Request, res: Response) => {
             }
             return data;
         }));
+        
+        let forExhibitionList = await exhibitionService.getMainForExhibitionByCategory(client, category);
+        if (!forExhibitionList) {
+            res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
+
+        let forExhibitionPostList = await Promise.all(forExhibitionList.map(async (forData: any) => {
+            let artistData = await userService.findUserById(client, forData.userId);
+            const likeCount = await likeService.getLikeCount(client, forData.id);
+            const isLiked = await likeService.getIsLiked(client, forData.id, userId); 
+            const bookmarkCount = await bookmarkService.getBookmarkCount(client, forData.id);
+            const isBookmarked = await bookmarkService.getIsBookmarked(client, forData.id, userId);
+
+            let data = {
+                exhibitionId: forData.id,
+                title: forData.title,
+                posterImage: forData.posterImage,
+                artist: {
+                    artistId: forData.userId,
+                    nickname: artistData.nickname,
+                },
+                like: {
+                    isLiked: isLiked.isLiked == 1? true : false,
+                    likeCount: parseInt(likeCount.likeCount)
+                },
+                bookmark: {
+                    isBookmarked: isBookmarked.isBookmarked == 1? true : false,
+                    bookmarkCount: parseInt(bookmarkCount.bookmarkCount)
+                }
+            }
+            return data;
+        }));
 
         let categoryExhibitionList = await exhibitionService.getMainExhibitionByCategory(client, category);
         if (!categoryExhibitionList) {
@@ -90,7 +122,7 @@ export default async (req: Request, res: Response) => {
         }));
 
         let mainData = {
-            forArtiExhibition: popularExhibitionPostList,
+            forArtiExhibition: forExhibitionPostList,
             popularExhibition: popularExhibitionPostList,
             categoryExhibition: categoryExhibitionPostList
         }

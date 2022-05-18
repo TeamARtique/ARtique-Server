@@ -37,6 +37,25 @@ const getMainPopularExhibitionByCategory = async (client: any, category: number)
   return convertSnakeToCamel.keysToCamel(rows);
 };
 
+// ✅ 카테고리별 메인뷰 ~를 위한 포스트 리스트 가져오기
+const getMainForExhibitionByCategory = async (client: any, category: number) => {
+  const { rows } = await client.query(
+    `
+    SELECT e.*
+    FROM "exhibition" e
+    INNER JOIN "like" l
+    ON e.id = l.exhibition_id
+    AND l.is_deleted = false
+    WHERE e.category = $1
+    AND e.is_public = true
+    AND e.is_deleted = false
+    GROUP BY e.id ORDER BY count(l.exhibition_id) ASC LIMIT 6
+    `,
+    [category]
+  );
+  return convertSnakeToCamel.keysToCamel(rows);
+};
+
 // ✅ 카테고리별 포스트 전체 리스트 가져오기(최신순)
 const getEntireCategoryExhibitionDefault = async (client: any, category: number) => {
   const { rows } = await client.query(
@@ -173,4 +192,5 @@ export default {
   deleteExhibition,
   deleteExhibitionByUserId,
   createExhibition,
+  getMainForExhibitionByCategory,
 };
