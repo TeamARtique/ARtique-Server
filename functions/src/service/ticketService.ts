@@ -4,21 +4,19 @@ const convertSnakeToCamel = require("../lib/convertSnakeToCamel");
 const getTicketBookData = async (client: any, userId: number) => {
     const { rows } = await client.query(
         `
-        SELECT u.*, count(e.id) as exhibition_count, count(t.exhibition_id) as ticket_count
-        FROM "user" u
-        LEFT OUTER JOIN "exhibition" e
-        ON e.user_id = u.id
-        AND e.is_deleted = false
-        LEFT OUTER JOIN "ticket" t
-        ON t.user_id = u.id
-        AND t.exhibition_id = e.id
+        SELECT t.exhibition_id, e.title, e.poster_image, u.nickname
+        FROM "ticket" t
+        INNER JOIN "exhibition" e
+        ON t.exhibition_id = e.id
+        INNER JOIN "user" u 
+        ON u.id = e.user_id
+        WHERE t.user_id = $1
         AND t.is_deleted = false
-        WHERE u.id = $1
-        GROUP BY u.id
+        ORDER BY t.updated_at DESC
         `,
         [userId]
     );
-    return convertSnakeToCamel.keysToCamel(rows[0]);
+    return convertSnakeToCamel.keysToCamel(rows);
 };
 
 // ✅ 티켓북 생성
