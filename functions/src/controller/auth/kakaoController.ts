@@ -63,6 +63,8 @@ export default async (req: Request, res: Response) => {
                     refreshToken: jwtRefreshtoken.refreshtoken
                 }
             }
+
+            // TODO: 회원가입 세부정보 저장 컨트롤러 호출
             return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.CREATED_USER, signData));
         }
         
@@ -76,6 +78,8 @@ export default async (req: Request, res: Response) => {
                 refreshToken: jwtRefreshtoken.refreshtoken
             }
         }
+
+        // TODO: 회원가입 세부정보 저장 컨트롤러 호출
         return res.status(statusCode.OK).send(util.success(statusCode.OK, responseMessage.LOGIN_SUCCESS, loginData));
     } catch (error: any) {
         // ⛔️ client측에서 넘어온 refreshToken이 유효하지 않을 경우
