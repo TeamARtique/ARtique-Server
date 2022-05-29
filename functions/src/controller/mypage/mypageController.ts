@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import mypageService from "../../service/mypageService";
+import ticketService from "../../service/ticketService";
 import userService from "../../service/userService";
 import likeService from "../../service/likeService";
 import bookmarkService from "../../service/bookmarkService";
@@ -26,6 +27,7 @@ export default async (req: Request, res: Response) => {
         if (!userData || !myExhibitionData || !myBookmarkedData) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
         }
+        let ticketCount = await ticketService.getTicketBookData(client, userId);
 
         let myExhibitionPostList = await Promise.all(myExhibitionData.map(async (exhibitionData: any) => {
             let artistData = await userService.findUserById(client, exhibitionData.userId);
@@ -90,7 +92,7 @@ export default async (req: Request, res: Response) => {
                 introduction: userData.introduction,
                 website: userData.website,
                 exhibitionCount: parseInt(userData.exhibitionCount),
-                ticketCount: parseInt(userData.ticketCount)
+                ticketCount: parseInt(ticketCount.length)
             },
             myExhibition: myExhibitionPostList,
             myBookmarkedData: myBookmarkPostList

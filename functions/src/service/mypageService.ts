@@ -4,15 +4,11 @@ const convertSnakeToCamel = require("../lib/convertSnakeToCamel");
 const getMypageUserData = async (client: any, userId: number) => {
     const { rows } = await client.query(
         `
-        SELECT u.*, count(e.id) as exhibition_count, count(t.exhibition_id) as ticket_count
+        SELECT u.*, count(e.id) as exhibition_count
         FROM "user" u
         LEFT OUTER JOIN "exhibition" e
         ON e.user_id = u.id
         AND e.is_deleted = false
-        LEFT OUTER JOIN "ticket" t
-        ON t.user_id = u.id
-        AND t.exhibition_id = e.id
-        AND t.is_deleted = false
         WHERE u.id = $1
         GROUP BY u.id
         `,
