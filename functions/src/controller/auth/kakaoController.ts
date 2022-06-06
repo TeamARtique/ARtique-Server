@@ -53,11 +53,16 @@ export default async (req: Request, res: Response) => {
         const findUser = await userService.findUserByEmail(client, user.data.kakao_account.email);
         if (!findUser) {
             // ✅ DB에 없는 유저는 새로 생성한 후 토큰 발급
-            const newUser = await userService.createUser(client, user.data.kakao_account.email, user.data.kakao_account.profile.nickname, user.data.kakao_account.profile.profile_image_url, jwtRefreshtoken.refreshtoken);
+            const newUser = await userService.createUser(client, user.data.kakao_account.email, jwtRefreshtoken.refreshtoken);
             const jwtAccessToken = jwtHandlers.access(newUser); 
 
             let signData = {
-                user: newUser,
+                user: {
+                    userId: 0,
+                    email: "",
+                    nickname: ""
+                },
+                isSignup: true,
                 token: {
                     accessToken: jwtAccessToken.accesstoken,
                     refreshToken: jwtRefreshtoken.refreshtoken
@@ -71,8 +76,15 @@ export default async (req: Request, res: Response) => {
         // ✅ DB에 이미 존재하는 유저는 토큰 발급 후 전달
         const jwtToken = jwtHandlers.access(findUser);
         userService.updateRefreshToken(client, findUser.userId, jwtRefreshtoken.refreshtoken);
+        console.log(findUser)
+        console.log(findUser.nickname)
         let loginData = {
-            user: findUser,
+            user: {
+                userId: findUser.userId,
+                email: findUser.email,
+                nickname: findUser.nickname === null ? "" : findUser.nickname
+            },
+            isSignup: (findUser.nickname === null || findUser.nickname.length === 0) ? true : false,
             token: {
                 accessToken: jwtToken.accesstoken,
                 refreshToken: jwtRefreshtoken.refreshtoken

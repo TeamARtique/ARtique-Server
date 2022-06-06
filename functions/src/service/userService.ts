@@ -46,22 +46,18 @@ const findUserByRefreshToken = async (client: any, refreshToken: string) => {
 const createUser = async (
   client: any,        
   email: string,
-  nickname: string,
-  profileImage: string,
   refreshToken: string
 ) => {
   const { rows } = await client.query(
     `
       INSERT INTO "user"
-      (email, nickname, profile_image, refresh_token)
+      (email, refresh_token)
       VALUES
-      ($1, $2, $3, $4)
-      RETURNING id as user_id, email, nickname
+      ($1, $2)
+      RETURNING id as user_id, email
       `,
     [
       email,
-      nickname,
-      profileImage,
       refreshToken
     ],
   );
