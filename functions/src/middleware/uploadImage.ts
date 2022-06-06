@@ -27,7 +27,6 @@ const uploadImage = async (req: any, res: any, next: NextFunction) => {
     // req.body로 들어오는 게 파일일 경우 처리
     busboy.on("file", (name: any, file: any, info: any) => {
         const { filename, mimeType } = info;
-
         if (mimeType !== "image/jpeg" && mimeType !== "image/png") {
             return res.status(400).json({ error: "Wrong file type submitted" });
         }
@@ -42,7 +41,7 @@ const uploadImage = async (req: any, res: any, next: NextFunction) => {
         imageToAdd = { imageFileName, filepath, mimeType };
         file.pipe(fs.createWriteStream(filepath));
         imagesToUpload.push(imageToAdd);
-        
+
         file.on('error', function(err: any) {
             console.log("error:", err);
         })
@@ -53,38 +52,38 @@ const uploadImage = async (req: any, res: any, next: NextFunction) => {
     busboy.on("finish", async () => {
         let promises: any = [];
         imagesToUpload.forEach((imageToBeUploaded: any) => {
-            imageUrls.push(
-                `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageToBeUploaded.imageFileName}?alt=media`,
-            );
-            promises.push(
-                admin
-                .storage()
-                .bucket(firebaseConfig.storageBucket)
-                .upload(imageToBeUploaded.filepath, {
-                    resumable: true,
+        imageUrls.push(
+            `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageToBeUploaded.imageFileName}?alt=media`,
+        );
+        promises.push(
+            admin
+            .storage()
+            .bucket(firebaseConfig.storageBucket)
+            .upload(imageToBeUploaded.filepath, {
+                resumable: false,
+                metadata: {
                     metadata: {
-                        metadata: {
-                            contentType: imageToBeUploaded.mimetype,
-                        },
+                        contentType: imageToBeUploaded.mimetype,
                     },
-                }),
-                );
-            });
-            try {
-                await Promise.all(promises);
-                    req.body.fields = fields;
-                    req.body.imageUrls = imageUrls;
-                    next();
-                    return;
-            } catch (err) {
-                console.error(err);
-                functions.logger.error(
-                    `[FILE UPLOAD ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`,
-                );
-                return res
-                    .status(500)
-                    .json(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
-            }
+                },
+            }),
+            );
+        });
+        try {
+            await Promise.all(promises);
+                req.body.fields = fields;
+                req.body.imageUrls = imageUrls;
+                next();
+                return;
+        } catch (err) {
+            console.error(err);
+            functions.logger.error(
+                `[FILE UPLOAD ERROR] [${req.method.toUpperCase()}] ${req.originalUrl}`,
+            );
+            return res
+                .status(500)
+                .json(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+        }
     });
     busboy.end(req.rawBody);  
 };  
