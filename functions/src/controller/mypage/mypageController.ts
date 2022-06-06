@@ -93,7 +93,7 @@ export default async (req: Request, res: Response) => {
                 profileImage: userData.profileImage,
                 introduction: userData.introduction,
                 website: userData.website,
-                exhibitionCount: parseInt(userData.exhibitionCount),
+                exhibitionCount: myEntireExhibitionData.length,
                 ticketCount: parseInt(ticketCount.length)
             },
             myExhibitionCount: myEntireExhibitionData.length,
