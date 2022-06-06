@@ -21,7 +21,7 @@ export default async (req: Request, res: Response) => {
     try {
         client = await db.connect(req);
         let artistData = await userService.findUserById(client, artistId);
-        let exhibitionData = await mypageService.getMyExhibitionData(client, artistId);
+        let exhibitionData = await mypageService.getMyEntireExhibitionData(client, artistId);
 
         if (!artistData || !exhibitionData) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
