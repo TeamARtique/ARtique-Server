@@ -1,10 +1,10 @@
-import exhibitionService from "../../service/exhibitionService";
-import exhibitionDTO from "../../interface/req/exhibitionDTO";
-import artworkService from '../../service/artworkService'
-const db = require('../../db/db');
-const responseMessage = require("../../constants/responseMessage");
-const statusCode = require("../../constants/statusCode");
-const util = require("../../lib/util");
+import exhibitionService from "../../../service/exhibitionService";
+import exhibitionDTO from "../../../interface/req/exhibitionDTO";
+import artworkService from '../../../service/artworkService'
+const db = require('../../../db/db');
+const responseMessage = require("../../../constants/responseMessage");
+const statusCode = require("../../../constants/statusCode");
+const util = require("../../../lib/util");
 
 /**
  *  @route POST /exhibition/new
@@ -62,7 +62,7 @@ export default async (req: any, res: any) => {
                 tag: uploadExhibitionData.tag,
                 category: uploadExhibitionData.category,
                 gallerySize: uploadExhibitionData.gallerySize,
-                galleryTheme: uploadExhibitionData.galleryTheme,
+                galleryTheme: uploadExhibitionData.theme,
                 isPublic: uploadExhibitionData.isPublic,
                 createdAt: uploadExhibitionData.createdAt
             },
