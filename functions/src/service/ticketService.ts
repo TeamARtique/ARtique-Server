@@ -61,9 +61,23 @@ const updateTicketBookData = async (client: any, userId: number, exhibitionId: n
     return convertSnakeToCamel.keysToCamel(rows[0]);
 };
 
+// ✅ 티켓북 삭제
+const deleteTicketBookData = async (client: any, userId: number, exhibitionId: number) => {
+    const { rows } = await client.query(
+        `
+        DELETE FROM "ticket" t
+        WHERE t.user_id = $1 AND t.exhibition_id = $2
+        RETURNING true
+        `,
+        [userId, exhibitionId]
+    );
+    return convertSnakeToCamel.keysToCamel(rows[0]);
+};
+
 export default {
     getTicketBookData,
     createTicketBook,
     checkTicketBookData,
     updateTicketBookData,
+    deleteTicketBookData,
 };
