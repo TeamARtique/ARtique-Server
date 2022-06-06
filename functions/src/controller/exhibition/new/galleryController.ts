@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import exhibitionService from "../../service/exhibitionService";
-import artworkService from "../../service/artworkService";
-import likeService from "../../service/likeService";
-import bookmarkService from "../../service/bookmarkService";
-const db = require('../../db/db');
-const responseMessage = require("../../constants/responseMessage");
-const statusCode = require("../../constants/statusCode");
-const util = require("../../lib/util");
+import exhibitionService from "../../../service/exhibitionService";
+import artworkService from "../../../service/artworkService";
+import likeService from "../../../service/likeService";
+import bookmarkService from "../../../service/bookmarkService";
+const db = require('../../../db/db');
+const responseMessage = require("../../../constants/responseMessage");
+const statusCode = require("../../../constants/statusCode");
+const util = require("../../../lib/util");
 
 /**
  *  @route GET /gallery/:exhibitionId
