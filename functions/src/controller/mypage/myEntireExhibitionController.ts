@@ -20,7 +20,7 @@ export default async (req: Request, res: Response) => {
     try {
         client = await db.connect(req);
         let userData = await mypageService.getMypageUserData(client, userId);
-        let myExhibitionData = await mypageService.getMyEntireExhibitionData(client, userId);
+        let myExhibitionData = await mypageService.getMyEntireExhibitionDataWithPrivate(client, userId);
 
         if (!userData || !myExhibitionData) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));

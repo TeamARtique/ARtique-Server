@@ -22,7 +22,9 @@ export default async (req: Request, res: Response) => {
         client = await db.connect(req);
         let userData = await mypageService.getMypageUserData(client, userId);
         let myExhibitionData = await mypageService.getMyExhibitionData(client, userId);
+        let myEntireExhibitionData = await mypageService.getMyEntireExhibitionDataWithPrivate(client, userId);
         let myBookmarkedData = await mypageService.getMyBookmarkedData(client, userId);
+        let myEntireBookmarkData = await mypageService.getMyEntireBookmarkedData(client, userId);
 
         if (!userData || !myExhibitionData || !myBookmarkedData) {
             res.status(statusCode.INTERNAL_SERVER_ERROR).send(util.fail(statusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
@@ -94,7 +96,9 @@ export default async (req: Request, res: Response) => {
                 exhibitionCount: parseInt(userData.exhibitionCount),
                 ticketCount: parseInt(ticketCount.length)
             },
+            myExhibitionCount: myEntireExhibitionData.length,
             myExhibition: myExhibitionPostList,
+            myBookmarkCount: myEntireBookmarkData.length,
             myBookmarkedData: myBookmarkPostList
         }
 

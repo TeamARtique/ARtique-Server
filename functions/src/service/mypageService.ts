@@ -24,7 +24,6 @@ const getMyExhibitionData = async (client: any, userId: number) => {
         SELECT e.*
         FROM "exhibition" e
         WHERE e.user_id = $1
-        AND e.is_deleted = false
         ORDER BY e.created_at desc
         LIMIT 6
         `,
@@ -54,7 +53,7 @@ const getMyBookmarkedData = async (client: any, userId: number) => {
 };
 
 
-// ✅ 마이페이지 등록한 전시 데이터 전체 리스트 가져오기
+// ✅ 마이페이지 등록한 전시 데이터 전체 리스트 가져오기(비공개 제외)
 const getMyEntireExhibitionData = async (client: any, userId: number) => {
     const { rows } = await client.query(
         `
@@ -62,6 +61,20 @@ const getMyEntireExhibitionData = async (client: any, userId: number) => {
         FROM "exhibition" e
         WHERE e.user_id = $1
         AND e.is_deleted = false
+        ORDER BY e.created_at desc
+        `,
+        [userId]
+    );
+    return convertSnakeToCamel.keysToCamel(rows);
+};
+
+// ✅ 마이페이지 등록한 전시 데이터 전체 리스트 가져오기(비공개 포함)
+const getMyEntireExhibitionDataWithPrivate = async (client: any, userId: number) => {
+    const { rows } = await client.query(
+        `
+        SELECT e.*
+        FROM "exhibition" e
+        WHERE e.user_id = $1
         ORDER BY e.created_at desc
         `,
         [userId]
@@ -93,5 +106,6 @@ export default {
     getMyExhibitionData,
     getMyBookmarkedData,
     getMyEntireExhibitionData,
-    getMyEntireBookmarkedData
+    getMyEntireBookmarkedData,
+    getMyEntireExhibitionDataWithPrivate,
 };
